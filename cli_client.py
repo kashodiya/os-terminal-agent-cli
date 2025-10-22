@@ -81,7 +81,9 @@ def task(ctx, task, working_dir):
         if 'command' in res:
             status = "✅" if res['success'] else "❌"
             click.echo(f"  {status} {res['command']}")
-            if res['stdout']:
+            if not res['success'] and res['stderr']:
+                click.echo(f"    Error: {res['stderr'][:100]}...")
+            elif res['stdout']:
                 click.echo(f"    Output: {res['stdout'][:100]}...")
         else:
             click.echo(f"  📝 {res.get('step', f'Step {i}')}: {res.get('status', 'completed')}")

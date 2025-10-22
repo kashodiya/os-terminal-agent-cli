@@ -1,0 +1,53 @@
+Figure out the stream name first
+===
+Use the coorect command
+===
+Show me latest 3 logs from Lmabda myowu-controller
+===
+List Lambdas
+===
+List EC2 servers
+===
+Am I logged in to AWS CLI?
+===
+
+Kill all processes with name "notepad"
+===!
+
+What is the current system uptime and load?
+===
+list files in system's Windows folder
+===
+Which file name starts with R?
+===
+list files
+===
+Is this machine running as a virtual machine?
+===
+draw tree of files
+===
+answer first question again
+===
+what was my previous question?
+===
+List EC2 servers
+===
+Are we logged in into AWS?
+===
+Do we have access to AWS CLI from this pc?
+
+===
+Are we logged in?
+===
+Explain the firewall config on this pc
+
+What is the IP address of this computer?
+
+What is the name of this computer?
+
+How much disk space is available?
+
+This is just a comment
+
+
+python cli_client.py task "Set up a complete Python web development environment with Flask, create a sample project, initialize git repository, set up virtual environment, install dependencies, create basic Flask app structure, run tests, and deploy locally. Do all these in D:\Users\kaushik.ashodiya\Documents\MyProjects\temp\temp3 folder"

@@ -451,12 +451,21 @@ Provide a concise, helpful answer in plain English:"""
             task_description: Description of the task to be completed
             
         Returns:
-            List of steps to complete the task
+            List of executable CLI commands
         """
         print(f"🔧 Tool: create_task_plan(task_description='{task_description}')")
-        prompt = f"""Create a detailed step-by-step plan for this task: {task_description}
+        
+        # Detect OS for appropriate commands
+        is_windows = platform.system().lower() == 'windows'
+        os_info = "Windows (use cmd/powershell commands)" if is_windows else "Unix/Linux (use bash commands)"
+        
+        prompt = f"""Create executable CLI commands for this task: {task_description}
 
-Provide only the steps as a numbered list, one step per line. Be specific and actionable."""
+Operating System: {os_info}
+
+Provide ONLY executable CLI commands, one per line. Each command should be ready to run directly.
+For Windows, use commands like: mkdir, cd, python -m venv, pip install, echo, etc.
+Do not include explanatory text, just the commands."""
         
         try:
             response = self.bedrock.invoke_model(
@@ -471,21 +480,23 @@ Provide only the steps as a numbered list, one step per line. Be specific and ac
             result = json.loads(response['body'].read())
             plan_text = result['content'][0]['text']
             
-            # Extract steps from the response
-            steps = []
+            # Extract commands from the response
+            commands = []
             for line in plan_text.split('\n'):
                 line = line.strip()
-                if line and (line[0].isdigit() or line.startswith('-') or line.startswith('*')):
-                    # Remove numbering and clean up
-                    step = line.split('.', 1)[-1].strip() if '.' in line else line.lstrip('-*').strip()
-                    if step:
-                        steps.append(step)
+                if line and not line.startswith('#') and not line.startswith('Step'):
+                    # Remove numbering if present
+                    if line[0].isdigit() and '.' in line:
+                        line = line.split('.', 1)[1].strip()
+                    # Remove bullet points
+                    line = line.lstrip('-*').strip()
+                    if line:
+                        commands.append(line)
             
-            return steps if steps else ["Execute the task", "Verify completion"]
+            return commands if commands else [task_description]
             
         except Exception as e:
-            # Fallback to simple planning
-            return [f"Execute: {task_description}", "Verify completion"]
+            return [task_description]
     
     def summarize_command_output(self, command: str, result: Dict[str, Any]) -> str:
         """Summarize command output using LLM for better user understanding.
@@ -543,12 +554,14 @@ Provide a helpful summary that explains what the command did and what the result
             
             for i, step in enumerate(plan, 1):
                 print(f"Step {i}: {step}")
-                # Execute the original task as final step
-                if i == len(plan):
-                    result = self.execute_command(task, working_dir)
-                    results.append(result)
-                else:
-                    results.append({"step": step, "status": "planned"})
+                # Execute each step as individual command
+                result = self.execute_command(step, working_dir)
+                results.append(result)
+                
+                # Stop if step failed (unless it's a non-critical step)
+                if not result['success'] and not any(word in step.lower() for word in ['create', 'mkdir', 'echo']):
+                    print(f"❌ Step {i} failed, stopping execution")
+                    break
             
             return {"plan": plan, "results": results, "task_type": "complex"}
         else:
