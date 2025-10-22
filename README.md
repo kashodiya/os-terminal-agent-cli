@@ -102,16 +102,21 @@ python cli_client.py safety --reset
 Monitor `questions.txt` for changes and auto-process questions:
 
 ```bash
+# First, create your questions file from the example
+copy example.questions.txt questions.txt
+
+# Start watch mode
 python cli_client.py watch
 python cli_client.py watch --working-dir C:\path\to\monitor
 ```
 
-**Watch Mode Usage:**
-1. Add questions to `questions.txt`
-2. Use `===` as delimiter between questions
-3. Use `===!` as delimiter to enable **force mode** for risky commands
-4. The agent processes the first question automatically when file changes
-5. Questions are processed in order from top to bottom
+**Watch Mode Setup:**
+1. Copy or rename `example.questions.txt` to `questions.txt`
+2. Edit `questions.txt` with your own questions
+3. Use `===` as delimiter between questions
+4. Use `===!` as delimiter to enable **force mode** for risky commands
+5. The agent processes the first question automatically when file changes
+6. Questions are processed in order from top to bottom
 
 **Force Mode in Watch Mode:**
 - Use `===!` delimiter to bypass safety checks for the preceding question

@@ -128,3 +128,6 @@ $RECYCLE.BIN/
 
 # Local project settings
 /.pytest_cache/
+
+# User questions file
+questions.txt

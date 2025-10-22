@@ -1,0 +1,36 @@
+What is the current system uptime and load?
+===
+Show me all running processes that are using more than 100MB of memory
+===
+What's the total disk usage of this directory and its subdirectories?
+===
+Are there any AWS credentials configured on this system?
+===
+What network connections are currently active?
+===
+Show me the last 10 system events or logs
+===
+What's the current CPU and memory usage?
+===
+List all installed Python packages and their versions
+===
+What environment variables are currently set?
+===
+Check if Docker is installed and running
+===
+What's the current Git status of this repository?
+===
+Show me all files modified in the last 24 hours
+===
+What ports are currently listening on this machine?
+===
+Delete all .tmp files in the current directory
+===!
+Clear the system event logs
+===!
+Kill all processes with name "notepad"
+===!
+Remove all files in the temp directory recursively
+===!
+Restart the Windows Update service
+===!
