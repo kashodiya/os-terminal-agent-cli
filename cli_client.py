@@ -24,16 +24,28 @@ def cli(ctx, session, unsafe):
 @click.argument('command')
 @click.option('--working-dir', '-w', help='Working directory for the command')
 @click.option('--force', is_flag=True, help='Force execution (skip safety confirmation)')
+@click.option('--raw', is_flag=True, help='Show raw output without LLM summarization')
 @click.pass_context
-def execute(ctx, command, working_dir, force):
+def execute(ctx, command, working_dir, force, raw):
     """Execute a single CLI command."""
     agent = CLIAgent(ctx.obj['session'], safe_mode=ctx.obj['safe_mode'])
     result = agent.execute_command(command, working_dir, force=force)
     
     if result['success']:
         click.echo(f"✅ Command executed successfully")
-        if result['stdout']:
-            click.echo(f"Output:\n{result['stdout']}")
+        if result['stdout'] or result['stderr']:
+            if raw:
+                # Show raw output
+                if result['stdout']:
+                    click.echo(f"Output:\n{result['stdout']}")
+                if result['stderr']:
+                    click.echo(f"Error:\n{result['stderr']}")
+            else:
+                # Get LLM summary
+                summary = agent.summarize_command_output(command, result)
+                click.echo("\n" + "="*50)
+                click.echo(f"💬 Summary: {summary}")
+                click.echo("\n💡 Use --raw flag to see the original command output")
     elif result.get('blocked'):
         click.echo(f"🛡️ Command blocked for safety: {result['stderr']}")
         click.echo(f"Risk level: {result.get('risk_level', 'unknown').upper()}")

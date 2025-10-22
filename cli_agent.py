@@ -487,6 +487,48 @@ Provide only the steps as a numbered list, one step per line. Be specific and ac
             # Fallback to simple planning
             return [f"Execute: {task_description}", "Verify completion"]
     
+    def summarize_command_output(self, command: str, result: Dict[str, Any]) -> str:
+        """Summarize command output using LLM for better user understanding.
+        
+        Args:
+            command: The CLI command that was executed
+            result: The execution result dictionary
+            
+        Returns:
+            Human-readable summary of the command output
+        """
+        try:
+            context = self._get_context_prompt()
+            prompt = f"""{context}Summarize this command output in a clear, concise way for the user.
+
+Command: {command}
+Output: {result.get('stdout', '')}
+Error: {result.get('stderr', '')}
+Return Code: {result.get('return_code', 0)}
+
+Provide a helpful summary that explains what the command did and what the results mean. Be concise but informative:"""
+            
+            response = self.bedrock.invoke_model(
+                modelId="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+                body=json.dumps({
+                    "anthropic_version": "bedrock-2023-05-31",
+                    "max_tokens": 300,
+                    "messages": [{"role": "user", "content": prompt}]
+                })
+            )
+            
+            summary_result = json.loads(response['body'].read())
+            summary = summary_result['content'][0]['text'].strip()
+            
+            return summary
+            
+        except Exception as e:
+            # Fallback to basic summary if LLM fails
+            if result['success']:
+                return f"Command '{command}' executed successfully. Output length: {len(result.get('stdout', ''))} characters."
+            else:
+                return f"Command '{command}' failed with return code {result.get('return_code', -1)}. Error: {result.get('stderr', 'Unknown error')[:100]}"
+    
     def execute_task(self, task: str, working_dir: str = None) -> Dict[str, Any]:
         """Execute a task, creating a plan if it's complex."""
         print(f"🔧 Method: execute_task(task='{task}', working_dir={working_dir})")

@@ -56,18 +56,18 @@ python cli_client.py ask --file questions.txt
 ```
 
 ### `execute` - Direct Command Execution
-Execute CLI commands with built-in safety checks:
+Execute CLI commands with built-in safety checks and intelligent output summarization:
 
 ```bash
-# Safe command execution with risk assessment
+# Safe command execution with AI-powered output summary
 python cli_client.py execute "dir"
 python cli_client.py execute "git status" --working-dir C:\path\to\repo
 
+# Show raw output without LLM summarization
+python cli_client.py execute "systeminfo" --raw
+
 # Force execution of commands requiring confirmation
 python cli_client.py execute "del temp.txt" --force
-
-# System information (safe)
-python cli_client.py execute "systeminfo"
 ```
 
 ### `task` - Complex Task Execution
@@ -146,10 +146,12 @@ python cli_client.py --unsafe --session dangerzone execute "dangerous command"
 - `--file, -f`: Read input from file (for `ask` command)
 - `--unsafe`: Disable safety guardrails (USE WITH EXTREME CAUTION)
 - `--force`: Force execution of commands requiring confirmation
+- `--raw`: Show raw command output without LLM summarization (for `execute` command)
 
 ## Features
 
 - 🧠 **AI-Powered Intelligence**: Natural language understanding and command interpretation
+- 📊 **Intelligent Output Summarization**: LLM-powered command output analysis and explanation
 - 🛡️ **Safety Guardrails**: Multi-layer protection against dangerous commands
 - 💾 **Session Memory**: Remembers context across multiple interactions
 - 🔄 **Auto-Planning**: Breaks down complex tasks into executable steps
