@@ -1,0 +1,3 @@
+strands-agents
+click
+boto3

@@ -1,0 +1,30 @@
+Which file name starts with R?
+===
+list files
+===
+Is this machine running as a virtual machine?
+===
+draw tree of files
+===
+answer first question again
+===
+what was my previous question?
+===
+List EC2 servers
+===
+Are we logged in into AWS?
+===
+Do we have access to AWS CLI from this pc?
+
+===
+Are we logged in?
+===
+Explain the firewall config on this pc
+
+What is the IP address of this computer?
+
+What is the name of this computer?
+
+How much disk space is available?
+
+This is just a comment
